@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#2b5d55">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Pst.広告">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Pst. 広告ボード</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Noto+Sans+JP:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{
+  --paper:#f3f4f2; --card:#ffffff; --ink:#1b1d1c; --sub:#5d6461; --line:#dfe3e0;
+  --accent:#2b5d55; --accent-soft:#e3eeeb;
+  --ok:#2f7a46; --ok-soft:#e4f2e8;
+  --warn:#9a6a00; --warn-soft:#fbf0d6;
+  --bad:#b23a2e; --bad-soft:#f9e3e0;
+  --mute:#7b827f; --mute-soft:#eceeec;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#141716; --card:#1c201f; --ink:#e9ece9; --sub:#a3aba7; --line:#2e3431;
+    --accent:#7cc0b3; --accent-soft:#1f3330;
+    --ok:#7fcf97; --ok-soft:#1c3124;
+    --warn:#e7b94f; --warn-soft:#352a12;
+    --bad:#f08c80; --bad-soft:#3a1f1c;
+    --mute:#8d9591; --mute-soft:#262b29;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#141716; --card:#1c201f; --ink:#e9ece9; --sub:#a3aba7; --line:#2e3431;
+  --accent:#7cc0b3; --accent-soft:#1f3330;
+  --ok:#7fcf97; --ok-soft:#1c3124;
+  --warn:#e7b94f; --warn-soft:#352a12;
+  --bad:#f08c80; --bad-soft:#3a1f1c;
+  --mute:#8d9591; --mute-soft:#262b29;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:"Noto Sans JP",system-ui,-apple-system,"Hiragino Sans",sans-serif;font-size:14px;line-height:1.6;padding-inline:16px;padding-block:20px 48px}
+.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+.num{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:12px}
+.brand{display:flex;align-items:baseline;gap:12px}
+.brand b{font-family:"Libre Baskerville",Baskerville,"Times New Roman",serif;font-size:30px;letter-spacing:.01em}
+.brand span{font-size:15px;font-weight:700;color:var(--sub)}
+.stamp{font-size:12px;color:var(--sub);text-align:right}
+.stamp strong{color:var(--ink);font-weight:500}
+.alert{background:var(--bad-soft);border-left:4px solid var(--bad);padding:14px 16px;display:flex;flex-direction:column;gap:8px;border-radius:2px}
+.alert h2{margin:0;font-size:15px;color:var(--bad)}
+.alert ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.alert.calm{background:var(--ok-soft);border-left-color:var(--ok)}
+.alert.calm h2{color:var(--ok)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.kpi small{font-size:11px;color:var(--sub);letter-spacing:.06em}
+.kpi b{font-size:22px}
+.kpi em{font-style:normal;font-size:12px;color:var(--sub)}
+.statusbar{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:3px 10px;border-radius:999px;background:var(--mute-soft);color:var(--mute);white-space:nowrap}
+.chip.running{background:var(--ok-soft);color:var(--ok)}
+.chip.ending{background:var(--warn-soft);color:var(--warn)}
+.chip.hold{background:var(--accent-soft);color:var(--accent)}
+.chip.attention{background:var(--bad-soft);color:var(--bad)}
+.chip.ended{background:var(--mute-soft);color:var(--mute)}
+section{display:flex;flex-direction:column;gap:12px}
+section>h2{margin:0;font-size:13px;letter-spacing:.08em;color:var(--sub);display:flex;align-items:center;gap:8px}
+section>h2 .count{font-family:"IBM Plex Mono",monospace;color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--mute);padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.card.running{border-top-color:var(--ok)}
+.card.ending{border-top-color:var(--warn)}
+.card.hold{border-top-color:var(--accent)}
+.card.attention{border-top-color:var(--bad)}
+.card h3{margin:0;font-size:14px;line-height:1.45;text-wrap:balance}
+.card .set{font-size:12px;color:var(--sub)}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-size:12px;margin:0}
+.facts dt{color:var(--sub)}
+.facts dd{margin:0;word-break:break-all}
+.acos{display:flex;align-items:center;gap:8px;font-size:12px}
+.meter{position:relative;flex:1;height:8px;background:var(--mute-soft);border-radius:4px;overflow:hidden}
+.meter i{position:absolute;inset:0 auto 0 0;border-radius:4px;background:var(--ok)}
+.meter i.over{background:var(--bad)}
+.meter i.near{background:var(--warn)}
+.meter u{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink);text-decoration:none}
+.camps{display:flex;flex-wrap:wrap;gap:6px}
+.camp{font-size:11px;padding:2px 8px;border:1px solid var(--line);border-radius:3px;font-family:"IBM Plex Mono",monospace}
+.camp.on{border-color:var(--ok);color:var(--ok)}
+.camp.off{color:var(--mute);text-decoration:line-through}
+.next{font-size:12px;background:var(--paper);padding:8px 10px;border-radius:2px;display:flex;gap:8px}
+.next .num{color:var(--accent);white-space:nowrap}
+.sched{background:var(--card);border:1px solid var(--line);overflow-x:auto}
+.sched table{width:100%;border-collapse:collapse;font-size:13px}
+.sched th,.sched td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.sched th{font-size:11px;color:var(--sub);font-weight:500;letter-spacing:.06em}
+.sched tr:last-child td{border-bottom:0}
+.sched td.num{white-space:nowrap;color:var(--accent)}
+.log{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--sub)}
+.log div{display:flex;gap:10px}
+.log .num{color:var(--ink);white-space:nowrap}
+.empty{font-size:13px;color:var(--sub);background:var(--card);border:1px dashed var(--line);padding:16px}
+footer{font-size:11px;color:var(--sub);border-top:1px solid var(--line);padding-top:12px}
+@media (prefers-reduced-motion:no-preference){.card{transition:border-color .2s}}
+
+.btn{font:inherit;font-size:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:4px 10px;border-radius:3px;cursor:pointer;margin-bottom:4px}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.notice{background:var(--warn-soft);color:var(--warn);padding:10px 14px;font-size:13px;border-radius:2px}
+footer a{color:var(--accent)}
+
+body{margin:0;padding-top:max(20px,env(safe-area-inset-top));}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><b>Pst.</b><span>広告ボード</span></div>
+    <div class="stamp"><button id="reload" class="btn" type="button">再読み込み</button><br>最終更新 <strong class="num" id="updated">—</strong><br><span id="period">集計期間 —</span></div>
+  </header>
+
+  <div id="notice" class="notice" hidden></div>
+  <div id="alert" class="alert" hidden></div>
+
+  <div class="kpis" id="kpis">
+    <div class="kpi"><small>広告費（直近）</small><b class="num" id="k-spend">—</b><em id="k-spend-note">円</em></div>
+    <div class="kpi"><small>注文</small><b class="num" id="k-orders">—</b><em>件（広告経由）</em></div>
+    <div class="kpi"><small>広告売上（税抜）</small><b class="num" id="k-sales">—</b><em>円</em></div>
+    <div class="kpi"><small>ACoS</small><b class="num" id="k-acos">—</b><em>広告費 ÷ 広告売上</em></div>
+  </div>
+
+  <div class="statusbar" id="statusbar"></div>
+
+  <div id="groups"></div>
+
+  <section>
+    <h2>この先の予定</h2>
+    <div class="sched"><table><thead><tr><th>日付</th><th>やること</th></tr></thead><tbody id="sched"></tbody></table></div>
+  </section>
+
+  <section>
+    <h2>更新の記録</h2>
+    <div class="log" id="log"></div>
+  </section>
+
+  <footer>このページは、広告セッションでレポートを報告するたびに Claude がスプレッドシートを更新し、その内容を表示します。<a href="https://docs.google.com/spreadsheets/d/1Bvd8_m5VrvmSq3s5lhmS3ykH7C1loh1d8d4qyRIy3d0/edit" target="_blank" rel="noopener">スプレッドシートを開く</a>。赤い「かけ忘れ・要確認」は、出品していて広告が無い、または状況が分からない商品です。</footer>
+</div>
+
+<script>
+const API = "https://script.google.com/macros/s/AKfycbwFkDf9e0aReLGr5wmK-gfHSdol4vzWOnPh-gJdtIik9ZcG9EdkAJk6c82CC8Vw82nxPw/exec";
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/1Bvd8_m5VrvmSq3s5lhmS3ykH7C1loh1d8d4qyRIy3d0/edit";
+const LABEL2KEY = {"かけ忘れ・要確認":"attention","配信中":"running","在庫わずか":"ending","保留":"hold","終了・停止":"ended"};
+const STATUS = {
+  attention:{label:"かけ忘れ・要確認", order:0},
+  running:{label:"配信中", order:1},
+  ending:{label:"在庫わずか", order:2},
+  hold:{label:"保留", order:3},
+  ended:{label:"終了・停止", order:4}
+};
+const $ = id => document.getElementById(id);
+const el = (tag, cls, text) => { const e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e; };
+const yen = v => (v==null||v==="") ? "—" : (isNaN(Number(String(v).replace(/,/g,""))) ? String(v) : Number(String(v).replace(/,/g,"")).toLocaleString("ja-JP"));
+const store = { get(k){ try{return localStorage.getItem(k);}catch(e){return null;} }, set(k,v){ try{localStorage.setItem(k,v);}catch(e){} } };
+
+function getKey(){
+  const m = location.hash.match(/k=([A-Za-z0-9_-]+)/);
+  if(m){ store.set("pstad_key", m[1]); history.replaceState(null, "", location.pathname); return m[1]; }
+  return store.get("pstad_key");
+}
+function notice(msg){ const n=$("notice"); if(!msg){ n.hidden=true; return; } n.hidden=false; n.textContent=msg; }
+
+function renderMeta(m){
+  if(!m) return;
+  $("updated").textContent = m.updatedAt || "—";
+  $("period").textContent = "集計期間 " + (m.period || "—");
+  const t = m.totals || {};
+  $("k-spend").textContent = yen(t.spend);
+  $("k-orders").textContent = (t.orders===""||t.orders==null) ? "—" : t.orders;
+  $("k-sales").textContent = yen(t.sales);
+  $("k-acos").textContent = (t.acos===""||t.acos==null) ? "—" : t.acos + "%";
+}
+function renderList(sched, log){
+  const s=$("sched"); s.textContent="";
+  (sched||[]).forEach(x=>{ const tr=el("tr"); tr.append(el("td","num",x.date), el("td",null,x.task)); s.append(tr); });
+  const l=$("log"); l.textContent="";
+  (log||[]).slice(0,12).forEach(x=>{ const d=el("div"); d.append(el("span","num",x.date), el("span",null,x.text)); l.append(d); });
+}
+function acosRow(p){
+  const wrap=el("div","acos");
+  const a=p.last && p.last.acos; const tgt=p.targetAcos; const be=p.breakevenAcos;
+  wrap.append(el("span",null,"ACoS"));
+  const m=el("div","meter");
+  const scale = Math.max(40, (be||0)*1.3, (a||0)*1.1);
+  if(a!=null){
+    const i=el("i"); i.style.width=Math.min(100,a/scale*100)+"%";
+    if(be!=null && a>be) i.classList.add("over"); else if(tgt!=null && a>tgt) i.classList.add("near");
+    m.append(i);
+  }
+  if(tgt!=null){ const u=el("u"); u.style.left=Math.min(100,tgt/scale*100)+"%"; u.title="目標"; m.append(u); }
+  wrap.append(m);
+  wrap.append(el("span","num",(a!=null? a+"%":"—") + " / 目標 " + (tgt!=null? tgt+"%":"—")));
+  return wrap;
+}
+function card(p){
+  const c=el("article","card "+p.status);
+  const head=el("div"); head.append(el("h3",null,p.name||"")); if(p.set) head.append(el("div","set",p.set)); c.append(head);
+  const dl=el("dl","facts");
+  const add=(k,v)=>{ if(v==null||v==="") return; dl.append(el("dt",null,k), el("dd","num",v)); };
+  add("ASIN",(p.asins||[]).join(" / ") || "未記録");
+  add("価格", p.price); add("在庫", p.stock); add("利益", p.profit);
+  if(p.last && (p.last.spend!=null || p.last.orders!=null)) add("直近", `費用 ${yen(p.last.spend)}円・注文 ${p.last.orders ?? "—"}件`);
+  c.append(dl);
+  if(p.status!=="attention" && p.status!=="ended" && (p.targetAcos!=null || (p.last && p.last.acos!=null))) c.append(acosRow(p));
+  if(p.campaigns && p.campaigns.length){
+    const cs=el("div","camps");
+    p.campaigns.forEach(k=>cs.append(el("span","camp "+(k.on?"on":"off"), k.name + (k.budget? " ¥"+k.budget:""))));
+    c.append(cs);
+  }
+  if(p.next){ const n=el("div","next"); if(p.nextDate) n.append(el("span","num",p.nextDate)); n.append(el("span",null,p.next)); c.append(n); }
+  return c;
+}
+function renderProducts(list){
+  list.forEach(p=>{ p.status = LABEL2KEY[p.status] || p.status || "ended"; });
+  const groups=$("groups"); groups.textContent="";
+  const bar=$("statusbar"); bar.textContent="";
+  const by={}; list.forEach(p=>{ (by[p.status] ||= []).push(p); });
+  Object.keys(STATUS).sort((a,b)=>STATUS[a].order-STATUS[b].order).forEach(s=>{
+    const items=(by[s]||[]).sort((a,b)=>(a.order??99)-(b.order??99));
+    bar.append(el("span","chip "+s, STATUS[s].label+" "+items.length));
+    if(!items.length) return;
+    const sec=el("section"); const h=el("h2",null,STATUS[s].label+" "); h.append(el("span","count",String(items.length))); sec.append(h);
+    const g=el("div","grid"); items.forEach(p=>g.append(card(p))); sec.append(g); groups.append(sec);
+  });
+  const al=$("alert"); al.textContent=""; al.hidden=false;
+  const att=by.attention||[];
+  if(att.length){
+    al.className="alert"; al.append(el("h2",null,`広告のかけ忘れ・要確認が ${att.length} 件あります`));
+    const ul=el("ul"); att.forEach(p=>ul.append(el("li",null,p.name+(p.next? " — "+p.next:"")))); al.append(ul);
+  } else { al.className="alert calm"; al.append(el("h2",null,"かけ忘れはありません")); }
+  if(!list.length) groups.append(el("div","empty","まだ商品が登録されていません。"));
+}
+function render(d){ renderMeta(d.meta); renderProducts(d.products||[]); renderList(d.schedule, d.log); }
+
+async function load(){
+  const key = getKey();
+  const cached = store.get("pstad_cache");
+  if(cached){ try{ render(JSON.parse(cached)); }catch(e){} }
+  if(!key){ notice("このページは閲覧キー付きのリンクから開いてください（Claude が渡したリンク）。"); return; }
+  notice(cached ? "最新のデータを読み込み中…" : "読み込み中…");
+  try{
+    const r = await fetch(API + "?key=" + encodeURIComponent(key), {cache:"no-store"});
+    const d = await r.json();
+    if(!d.ok){ notice(d.error==="unauthorized" ? "閲覧キーが違います。Claude が渡したリンクから開き直してください。" : "データを読み込めませんでした。"); return; }
+    store.set("pstad_cache", JSON.stringify(d)); render(d); notice("");
+  }catch(e){
+    notice(cached ? "通信できないため、前回のデータを表示しています。" : "データを読み込めませんでした。スプレッドシートの初回セットアップ（承認）が済んでいるか確認してください。");
+  }
+}
+$("reload").addEventListener("click", load);
+load();
+</script>
+</body>
+</html>
